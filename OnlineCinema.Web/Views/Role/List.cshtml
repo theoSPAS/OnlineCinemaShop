@@ -1,0 +1,13 @@
+﻿@model OnlineCinema.Domain.DTO.RoleUserDTO
+
+<h1>Choose User and Role</h1>
+
+@using (Html.BeginForm("Role", "List", FormMethod.Post))
+{
+    @Html.DropDownList("User", new SelectList(Model.Users), "Choose User", new { @class = "form-control" })
+
+    <br/>
+
+    @Html.DropDownList("Role", new SelectList(Model.Roles), "Choose Role", new { @class = "form-control" })
+    <input type="submit" value="Send" />
+}

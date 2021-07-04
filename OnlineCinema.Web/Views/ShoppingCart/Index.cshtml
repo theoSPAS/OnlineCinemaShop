@@ -1,0 +1,77 @@
+﻿@using Microsoft.Extensions.Options
+@inject IOptions<OnlineCinema.Domain.StripeSettings> Stripe 
+@model OnlineCinema.Domain.DTO.ShoppingCartDTO
+
+
+
+    <div class="container">
+
+     @*   <div class="row m-4">
+            <a asp-controller="ShoppingCart" asp-action="Order" class="btn btn-dark">Order</a>
+        </div>*@
+
+
+        <div class="row my-3">
+            @if (Model.TotalPrice != 0)
+            {
+                <form asp-controller="ShoppingCart" asp-action="Pay" method="post">
+                    <article>
+                        <script src="https://checkout.stripe.com/checkout.js"
+                                class="stripe-button"
+                                data-key="@Stripe.Value.PublishableKey"
+                                data-locale="auto"
+                                data-description="Online Cinema Shop Payment"
+                                data-amount="@(Model.TotalPrice * 100)"
+                                data-label="Pay $@Model.TotalPrice">
+                        </script>
+                    </article>
+                </form>
+            }
+
+            </div>
+            <div class="row m-4">
+                <table class="table">
+                    <thead class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Number</th>
+                            <th scope="col">Ticket Name</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Ticket Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.TicketInShoppingCarts.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="5">No Ticket Active Here!</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @for (int t = 0; t < Model.TicketInShoppingCarts.Count; t++)
+                            {
+                                var ticket = Model.TicketInShoppingCarts[t];
+
+                                <tr>
+                                    <th scope="row">@(t+1)</th>
+                                    <td>@ticket.Ticket.TicketName</td>
+                                    <td>@ticket.Quantity</td>
+                                    <td>@ticket.Ticket.TicketPrice</td>
+                                    <td><a asp-controller="ShoppingCart" asp-action="RemoveFromCart" asp-route-id="@ticket.TicketId" class="btn btn-primary">Remove</a></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th scope="col">Total Price:</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col">@Model.TotalPrice</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
